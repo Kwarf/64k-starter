@@ -1,6 +1,6 @@
 #![no_std]
 #![no_main]
-#![windows_subsystem = "console"]
+#![windows_subsystem = "windows"]
 
 #[link(name = "libcmt")]
 extern "C" {}
@@ -26,12 +26,14 @@ use windows_sys::Win32::{
             PIXELFORMATDESCRIPTOR,
         },
     },
-    System::{SystemInformation::GetTickCount, Threading::ExitProcess},
+    System::Threading::ExitProcess,
     UI::{
         Input::KeyboardAndMouse::{GetAsyncKeyState, VK_ESCAPE},
         WindowsAndMessaging::{CreateWindowExA, ShowCursor, WS_MAXIMIZE, WS_POPUP, WS_VISIBLE},
     },
 };
+
+mod time;
 
 static SONG_BLOB: &'static [u8] = include_bytes!("song.bin");
 
@@ -89,14 +91,6 @@ unsafe fn set_uniform(location: i32, value: f32) {
     set(location, value);
 }
 
-unsafe fn elapsed_seconds() -> f32 {
-    static mut START: u32 = 0;
-    if START == 0 {
-        START = GetTickCount();
-    }
-    (GetTickCount() - START) as f32 / 1000f32
-}
-
 unsafe extern "C" fn wavesabre_device_factory(id: DeviceId) -> Device {
     match id {
         DeviceId::Slaughter => wavesabre_rs::device::slaughter(),
@@ -115,12 +109,12 @@ extern "C" fn mainCRTStartup() {
         let _player = wavesabre_rs::play(wavesabre_device_factory, &SONG_BLOB);
 
         while GetAsyncKeyState(VK_ESCAPE as i32) == 0 {
-            let elapsed = elapsed_seconds();
-            if elapsed > length.as_secs_f32() {
+            let elapsed = time::elapsed();
+            if elapsed > length {
                 break;
             }
 
-            set_uniform(0, elapsed);
+            set_uniform(0, elapsed.as_secs_f32());
             glRects(-1, -1, 1, 1);
             SwapBuffers(device);
         }
