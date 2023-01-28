@@ -21,9 +21,8 @@ use windows_sys::Win32::{
             DM_PELSWIDTH, HDC,
         },
         OpenGL::{
-            glRects, wglCreateContext, wglGetProcAddress, wglMakeCurrent, ChoosePixelFormat,
-            SetPixelFormat, SwapBuffers, PFD_DOUBLEBUFFER, PFD_SUPPORT_OPENGL,
-            PIXELFORMATDESCRIPTOR,
+            glRects, wglCreateContext, wglMakeCurrent, ChoosePixelFormat, SetPixelFormat,
+            SwapBuffers, PFD_DOUBLEBUFFER, PFD_SUPPORT_OPENGL, PIXELFORMATDESCRIPTOR,
         },
     },
     System::Threading::ExitProcess,
@@ -33,6 +32,8 @@ use windows_sys::Win32::{
     },
 };
 
+mod critical;
+mod gl;
 mod time;
 
 static SONG_BLOB: &'static [u8] = include_bytes!("song.bin");
@@ -74,23 +75,6 @@ unsafe fn create_device() -> HDC {
     device
 }
 
-unsafe fn set_shader(source: &'static str) {
-    let create_program: unsafe extern "C" fn(i32, u32, &*const u8) -> i32 = core::mem::transmute(
-        wglGetProcAddress(b"glCreateShaderProgramv\0".as_ptr() as *const u8).unwrap(),
-    );
-    let use_program: unsafe extern "C" fn(i32) -> c_void =
-        core::mem::transmute(wglGetProcAddress(b"glUseProgram\0".as_ptr() as *const u8).unwrap());
-
-    let program = create_program(0x8B30, 1, &source.as_ptr());
-    use_program(program);
-}
-
-unsafe fn set_uniform(location: i32, value: f32) {
-    let set: unsafe extern "C" fn(i32, f32) =
-        core::mem::transmute(wglGetProcAddress(b"glUniform1f\0".as_ptr() as *const u8).unwrap());
-    set(location, value);
-}
-
 unsafe extern "C" fn wavesabre_device_factory(id: DeviceId) -> Device {
     match id {
         DeviceId::Slaughter => wavesabre_rs::device::slaughter(),
@@ -103,7 +87,7 @@ extern "C" fn mainCRTStartup() {
     unsafe {
         enter_fullscreen();
         let device = create_device();
-        set_shader("uniform float iTime;\nvoid main(){gl_FragColor=vec4(.5+.5*cos(iTime+(gl_FragCoord.xy/vec2(1920,1080)).xyx+vec3(0,2,4)),1.0);}\0");
+        gl::set_shader("uniform float iTime;\nvoid main(){gl_FragColor=vec4(.5+.5*cos(iTime+(gl_FragCoord.xy/vec2(1920,1080)).xyx+vec3(0,2,4)),1.0);}\0");
 
         let length = wavesabre_rs::length(SONG_BLOB);
         let _player = wavesabre_rs::play(wavesabre_device_factory, &SONG_BLOB);
@@ -114,7 +98,7 @@ extern "C" fn mainCRTStartup() {
                 break;
             }
 
-            set_uniform(0, elapsed.as_secs_f32());
+            gl::set_uniform(0, elapsed.as_secs_f32());
             glRects(-1, -1, 1, 1);
             SwapBuffers(device);
         }
