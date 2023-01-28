@@ -87,7 +87,8 @@ extern "C" fn mainCRTStartup() {
     unsafe {
         enter_fullscreen();
         let device = create_device();
-        gl::set_shader("uniform float iTime;\nvoid main(){gl_FragColor=vec4(.5+.5*cos(iTime+(gl_FragCoord.xy/vec2(1920,1080)).xyx+vec3(0,2,4)),1.0);}\0");
+        let program = gl::create_shader_program(gl::ShaderType::Fragment, "uniform float iTime;\nvoid main(){gl_FragColor=vec4(.5+.5*cos(iTime+(gl_FragCoord.xy/vec2(1920,1080)).xyx+vec3(0,2,4)),1.0);}\0");
+        gl::use_program(program);
 
         let length = wavesabre_rs::length(SONG_BLOB);
         let _player = wavesabre_rs::play(wavesabre_device_factory, &SONG_BLOB);
