@@ -34,6 +34,7 @@ use windows_sys::Win32::{
 
 mod critical;
 mod gl;
+mod glsl;
 mod time;
 
 static SONG_BLOB: &'static [u8] = include_bytes!("song.bin");
@@ -87,7 +88,7 @@ extern "C" fn mainCRTStartup() {
     unsafe {
         enter_fullscreen();
         let device = create_device();
-        let program = gl::create_shader_program(gl::ShaderType::Fragment, "uniform float iTime;\nvoid main(){gl_FragColor=vec4(.5+.5*cos(iTime+(gl_FragCoord.xy/vec2(1920,1080)).xyx+vec3(0,2,4)),1.0);}\0");
+        let program = gl::create_shader_program(gl::ShaderType::Fragment, glsl::SHADER_FRAG);
         gl::use_program(program);
 
         let length = wavesabre_rs::length(SONG_BLOB);

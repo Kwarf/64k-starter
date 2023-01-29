@@ -24,7 +24,7 @@ impl Into<i32> for ShaderType {
     }
 }
 
-pub unsafe fn create_shader_program(shader_type: ShaderType, source: &'static str) -> ProgramIdx {
+pub unsafe fn create_shader_program(shader_type: ShaderType, source: &'static [u8]) -> ProgramIdx {
     static CELL: OnceCell<unsafe extern "C" fn(i32, u32, &*const u8) -> i32> = OnceCell::new();
     CELL.get_or_init(|| core::mem::transmute(load(b"glCreateShaderProgramv\0")))(shader_type.into(), 1, &source.as_ptr())
 }

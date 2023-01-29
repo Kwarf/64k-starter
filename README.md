@@ -5,6 +5,7 @@ Rust.
 
 ### Out of the box it will:
 
+- Minify shader sources as a build step using [Shader_Minifier](https://github.com/laurentlb/Shader_Minifier)
 - Create a fullscreen 1920x1080 window
 - Load a fragment shader (the default example from [Shadertoy](https://www.shadertoy.com/))
 - Load and play a [WaveSabre](https://github.com/logicomacorp/WaveSabre) song using [wavesabre-rs](https://github.com/Kwarf/wavesabre-rs)
