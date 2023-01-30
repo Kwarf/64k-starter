@@ -110,6 +110,6 @@ extern "C" fn mainCRTStartup() {
 }
 
 #[panic_handler]
-fn panic_handler(_: &core::panic::PanicInfo) -> ! {
-    loop {}
+fn panic_handler(i: &core::panic::PanicInfo) -> ! {
+    unsafe { ExitProcess(0xFFFF); }
 }
