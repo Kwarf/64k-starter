@@ -54,7 +54,7 @@ unsafe fn enter_fullscreen() {
 unsafe fn create_device() -> HDC {
     let handle = CreateWindowExA(
         0,
-        "edit".as_ptr(),
+        "edit\0".as_ptr(),
         0 as *const u8,
         WS_POPUP | WS_VISIBLE | WS_MAXIMIZE,
         0,
