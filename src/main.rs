@@ -88,8 +88,8 @@ extern "C" fn mainCRTStartup() {
     unsafe {
         enter_fullscreen();
         let device = create_device();
-        let program = gl::create_shader_program(gl::ShaderType::Fragment, glsl::SHADER_FRAG);
-        gl::use_program(program);
+        let program = gl::Program::new(gl::ShaderType::Fragment, glsl::SHADER_FRAG);
+        program.bind();
 
         let length = wavesabre_rs::length(SONG_BLOB);
         let _player = wavesabre_rs::play(wavesabre_device_factory, &SONG_BLOB);
@@ -100,7 +100,7 @@ extern "C" fn mainCRTStartup() {
                 break;
             }
 
-            gl::set_uniform(0, elapsed.as_secs_f32());
+            program.set_uniform_f32(0, elapsed.as_secs_f32());
             glRects(-1, -1, 1, 1);
             SwapBuffers(device);
         }
