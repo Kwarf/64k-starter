@@ -2,6 +2,9 @@
 #![no_main]
 #![windows_subsystem = "windows"]
 
+#[global_allocator]
+static ALLOCATOR: libc_alloc::LibcAlloc = libc_alloc::LibcAlloc;
+
 #[link(name = "libcmt")]
 extern "C" {}
 #[link(name = "ucrt")]
@@ -10,6 +13,8 @@ extern "C" {}
 extern "C" {}
 #[link(name = "vcruntime")]
 extern "C" {}
+
+extern crate alloc;
 
 use core::{ffi::c_void, mem};
 
@@ -88,7 +93,7 @@ extern "C" fn mainCRTStartup() {
     unsafe {
         enter_fullscreen();
         let device = create_device();
-        let program = gl::Program::new(gl::ShaderType::Fragment, glsl::SHADER_FRAG);
+        let mut program = gl::Program::new(gl::ShaderType::Fragment, glsl::SHADER_FRAG);
         program.bind();
 
         let length = wavesabre_rs::length(SONG_BLOB);
@@ -100,7 +105,7 @@ extern "C" fn mainCRTStartup() {
                 break;
             }
 
-            program.set_uniform_f32(0, elapsed.as_secs_f32());
+            program.set_uniform_f32(glsl::VAR_ITIME, elapsed.as_secs_f32());
             glRects(-1, -1, 1, 1);
             SwapBuffers(device);
         }
@@ -110,6 +115,8 @@ extern "C" fn mainCRTStartup() {
 }
 
 #[panic_handler]
-fn panic_handler(i: &core::panic::PanicInfo) -> ! {
-    unsafe { ExitProcess(0xFFFF); }
+fn panic_handler(_: &core::panic::PanicInfo) -> ! {
+    unsafe {
+        ExitProcess(0xFFFF);
+    }
 }
