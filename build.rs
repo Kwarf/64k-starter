@@ -8,17 +8,19 @@ use std::{
 
 use walkdir::WalkDir;
 
+const SHADER_MINIFIER_VERSION: &'static str = "1.3.4";
+
 fn shader_minifier_path() -> PathBuf {
     Path::new(&env::var_os("CARGO_MANIFEST_DIR").unwrap())
         .join("target")
-        .join("shader_minifier.exe")
+        .join(format!("shader_minifier_v{}.exe", SHADER_MINIFIER_VERSION))
         .to_path_buf()
 }
 
 fn ensure_shader_minifier_exists() {
     let path = shader_minifier_path();
     if !path.exists() {
-        let mut response = reqwest::blocking::get("https://github.com/laurentlb/Shader_Minifier/releases/download/1.3.3/shader_minifier.exe")
+        let mut response = reqwest::blocking::get(format!("https://github.com/laurentlb/Shader_Minifier/releases/download/{}/shader_minifier.exe", SHADER_MINIFIER_VERSION))
             .unwrap();
 
         let mut file = File::create(path).unwrap();
