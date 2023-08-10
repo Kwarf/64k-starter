@@ -8,7 +8,7 @@ use std::{
 
 use walkdir::WalkDir;
 
-const SHADER_MINIFIER_VERSION: &'static str = "1.3.4";
+const SHADER_MINIFIER_VERSION: &'static str = "1.3.6";
 
 fn shader_minifier_path() -> PathBuf {
     Path::new(&env::var_os("CARGO_MANIFEST_DIR").unwrap())
