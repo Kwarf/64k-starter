@@ -14,15 +14,15 @@ Rust.
 
 ### Size
 
-A release build (`cargo build --release`) of this project as is will result in a binary size of 27 136 bytes.
+A release build (`cargo build --release`) of this project as is will result in a binary size of 28 672 bytes.
 
-Packing it with [UPX](https://github.com/upx/upx) can then reduce it down to 15 360 bytes.
+Packing it with [UPX](https://github.com/upx/upx) can then reduce it down to 16 384 bytes.
 
 #### Without music
 
 If you have a demo without music, or if you bring your own software synth, the size without music may be of interest.
 
-3 584 bytes as is, but with some more linker tweaks it can be brought down further to 2 192 bytes, which UPX cannot
+5 120 bytes as is, but with some more linker tweaks it can be brought down further to 4 208 bytes, which UPX cannot
 improve.
 
 ## Thanks to
