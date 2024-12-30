@@ -1323,8 +1323,8 @@ checksum = "943aab3fdaaa029a6e0271b35ea10b72b943135afe9bffca82384098ad0e06a6"
 
 [[package]]
 name = "wavesabre-rs"
-version = "0.1.0"
-source = "git+https://github.com/Kwarf/wavesabre-rs.git#a1a674ba82b92798827fb97aca511464e3801682"
+version = "0.2.0"
+source = "git+https://github.com/Kwarf/wavesabre-rs.git#f0c2bac6a3b7f2b5020d1027801a1d29fbce7aed"
 dependencies = [
  "cc",
  "libc",
