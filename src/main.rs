@@ -16,7 +16,7 @@ extern "C" {}
 
 extern crate alloc;
 
-use core::{ffi::c_void, mem};
+use core::mem;
 
 use wavesabre_rs::device::{Device, DeviceId};
 use windows_sys::Win32::{
@@ -60,16 +60,16 @@ unsafe fn create_device() -> HDC {
     let handle = CreateWindowExA(
         0,
         "edit\0".as_ptr(),
-        0 as *const u8,
+        core::ptr::null(),
         WS_POPUP | WS_VISIBLE | WS_MAXIMIZE,
         0,
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0 as *const c_void,
+        core::ptr::null_mut(),
+        core::ptr::null_mut(),
+        core::ptr::null_mut(),
+        core::ptr::null(),
     );
 
     let device = GetDC(handle);

@@ -14,16 +14,16 @@ codegen-units = 1
 
 [build-dependencies]
 walkdir = "2.5"
-reqwest = { version = "0.12.5", features = ["blocking"] }
+reqwest = { version = "0.12.11", features = ["blocking"] }
 
 [dependencies.critical-section]
-version = "1.1.2"
+version = "1.2.0"
 
 [dependencies.libc_alloc]
 version = "1.0.7"
 
 [dependencies.once_cell]
-version = "1.19.0"
+version = "1.20.2"
 default-features = false
 features = [
     "critical-section"
@@ -33,7 +33,7 @@ features = [
 git = "https://github.com/Kwarf/wavesabre-rs.git"
 
 [dependencies.windows-sys]
-version = "0.52.0"
+version = "0.59.0"
 default-features = false
 features = [
     "Win32_Foundation",
